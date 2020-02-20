@@ -55,7 +55,7 @@ export default class GreetingScreen extends React.Component {
             <Row style={{ minHeight: '98vh', backgroundColor: "#f5f5f5" }}>
                 <Col xs={12} sm={12} md={6} lg={6} style={{ padding: '175px 0' }}>
                     <Container style={{ width: '75%' }}>
-                        <Header as='h1'>Login or sign up to continue</Header>
+                        <Header as='h1'>Login or sign up to continue ()</Header>
                         {this.renderGreetingScreen()}
                     </Container>
                 </Col>
