@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button, Form, Container } from 'semantic-ui-react'
+import { Input, Button, Form, Container, Header } from 'semantic-ui-react'
 
 export default class TradeForm extends React.Component {
 
@@ -18,27 +18,127 @@ export default class TradeForm extends React.Component {
         console.log(event.target.value)
     }
 
-    sellShares = () => {
-        console.log('sold')
+    buyShares = () => {
+        Promise.all([
+            fetch('https://limitless-reef-85588.herokuapp.com/trades', {
+                method: "POST",
+                body: JSON.stringify({
+                    ticker: this.props.symbol.toUpperCase(),
+                    quantity: this.state.quantity,
+                    user_id: localStorage.user_id,
+                    price: this.props.price,
+                    buy: true
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(r => r.json()),
+            fetch('https://limitless-reef-85588.herokuapp.com/portfolio_items', {
+                method: "POST",
+                body: JSON.stringify({
+                    ticker: this.props.symbol,
+                    quantity: this.state.quantity,
+                    user_id: localStorage.user_id
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(r => r.json()),
+            fetch(`https://limitless-reef-85588.herokuapp.com/users/${localStorage.user_id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    cash: (parseInt(this.props.cash) - (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))))
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+        ])
+            .then((value) => {
+                console.log(value)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
-    buyShares = () => {
-        fetch()
+    sellShares = () => {
+        let stockId;
+
+        Promise.all([
+            fetch('https://limitless-reef-85588.herokuapp.com/trades', {
+                method: "POST",
+                body: JSON.stringify({
+                    ticker: this.props.symbol.toUpperCase(),
+                    quantity: this.state.quantity,
+                    user_id: localStorage.user_id,
+                    price: this.props.price,
+                    buy: false
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(r => r.json()),
+            fetch(`https://limitless-reef-85588.herokuapp.com/portfolio_items/${this.props.portfolio.find(x => x.ticker === this.props.symbol.toUpperCase()).id}`, {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    ticker: this.props.symbol.toUpperCase(),
+                    quantity: this.state.quantity,
+                    user_id: localStorage.user_id
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(r => r.json()),
+            fetch(`https://limitless-reef-85588.herokuapp.com/users/${localStorage.user_id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    cash: (parseInt(this.props.cash) + (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))))
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+        ])
+            .then((value) => {
+                console.log(value)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    compare = () => {
+        return (this.props.cash > (this.props.price * this.state.quantity).toFixed(2))
     }
 
     renderButtons = () => {
         return (<Container>
-            <Button onClick={this.buyShares} color={'red'} >Buy</Button>
+            <Button disabled={this.compare() ? false : true} onClick={this.buyShares} color={this.compare() ? 'red' : 'grey'} >Buy</Button>
             <Button onClick={this.sellShares} color={'blue'} >Sell</Button>
             {/* {this.props.portfolio.includes(this.props.symbol) ? <Button onClick={this.sellShares} color={'blue'} >Sell</Button> : null} */}
         </Container>)
     }
 
     render() {
-        return <Form >
-            <Input label="Quantity" value={this.state.quantity} onChange={this.quantityChange} type="integer" /><br></br>
-            <div style={{ 'height': '2vh' }} />
-            {this.renderButtons()}
-        </Form>
+        return <Container>
+            <Form >
+                <Input label="Quantity" value={parseInt(this.state.quantity)} onChange={this.quantityChange} type="number" /><br></br>
+                <div style={{ 'height': '2vh' }} />
+                {this.renderButtons()}
+            </Form>
+            <Header as='h6'>Total cost: ${(parseInt(this.props.price) * parseInt(this.state.quantity).toFixed(2))}</Header>
+            <Header as='h6'>Cash available: ${this.props.cash}</Header>
+        </Container>
     }
 }

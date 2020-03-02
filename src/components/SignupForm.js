@@ -35,7 +35,7 @@ export default class SignupForm extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost:3000/users/', {
+        fetch('https://limitless-reef-85588.herokuapp.com/users', {
             method: "POST",
             body: JSON.stringify({
                 email: this.state.email,
@@ -46,15 +46,14 @@ export default class SignupForm extends React.Component {
             }),
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                // "Authorization": "LT1"
+                'Accept': 'application/json'
             }
         })
             .then(r => r.json())
             .then(response => {
                 if (!!response.user_id) {
                     console.log(response)
-                    this.props.setToken(response)
+                    this.props.setUser(response)
                 } else {
                     console.log('error')
                     console.log(response)
@@ -64,7 +63,7 @@ export default class SignupForm extends React.Component {
 
     render() {
         return (
-            <Form onSubmit={this.handleSubmit} style={{ width: '40%', 'align-content': 'center' }}>
+            <Form onSubmit={this.handleSubmit} style={{ width: '40%', alignContent: 'center' }}>
                 <Input style={{ width: '100%', margin: 'auto', padding: '10px' }} label="Email" onChange={this.emailChange} type="text" /><br></br>
 
                 <Input style={{ width: '100%', margin: 'auto', padding: '10px' }} label="Fist Name" onChange={this.firstNameChange} type="text" /><br></br>
@@ -74,7 +73,7 @@ export default class SignupForm extends React.Component {
                 <Input style={{ width: '100%', margin: 'auto', padding: '10px' }} label="Password" onChange={this.passwordChange} type="password" /><br></br>
 
                 <Button onClick={this.props.backToMenu} >Back</Button>
-                <input type="submit" value="Sign Up" class="ui blue button" />
+                <input type="submit" value="Sign Up" className="ui blue button" />
             </Form>
         )
     }

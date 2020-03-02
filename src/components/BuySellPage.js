@@ -57,7 +57,7 @@ export default class BuySellPage extends React.Component {
     render() {
         return <Row style={{ minHeight: '98vh', backgroundColor: "#f5f5f5" }}>
             <Col xs={12} sm={12} md={6} lg={6} style={{ padding: '20vh 0' }}>
-                <Container style={{ 'padding-left': '15vh' }}>
+                <Container style={{ 'paddingLeft': '15vh' }}>
                     <Header>Summary for {this.state.symbol.toUpperCase()}</Header>
                     <Label size={'big'}>
                         ${this.state.price}
@@ -75,8 +75,8 @@ export default class BuySellPage extends React.Component {
                 </Container>
             </Col>
             <Col xs={12} sm={12} md={6} lg={6} style={{ padding: '20vh 0' }}>
-                <Container style={{ 'padding-left': '15vh', 'padding-top': '10vh' }}>
-                    {!!localStorage.user_id ? <TradeForm symbol={this.state.symbol} portfolio={this.props.userPortfolio} /> : null}
+                <Container style={{ 'paddingLeft': '15vh', 'paddingTop': '10vh' }}>
+                    {!!localStorage.user_id ? <TradeForm cash={this.props.cash} symbol={this.state.symbol} price={this.state.price} portfolio={this.props.userPortfolio} /> : null}
                 </Container>
             </Col>
         </Row>

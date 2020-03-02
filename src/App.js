@@ -10,7 +10,6 @@ class App extends React.Component {
     transactionHistory: [],
     session: false,
     loggedInUserId: null,
-    token: null,
     loggedInUserProfile: {}
   }
 
@@ -22,22 +21,20 @@ class App extends React.Component {
       transactionHistory: [],
       session: false,
       loggedInUserId: null,
-      token: null
+      loggedInUserProfile: {}
     })
     window.location.reload();
   }
 
-  setToken = (obj) => {
+  setUser = (obj) => {
 
-    const { token, user_id } = obj
-
-    localStorage.token = token
+    const { user_id } = obj
     localStorage.user_id = user_id
 
     this.setState({
-      token: token,
       loggedInUserId: user_id,
-      session: true
+      session: true,
+      loggedInUserProfile: obj
     })
   }
 
@@ -50,14 +47,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(process.env.REACT_APP_SECRET_KEY)
     if (!!localStorage.user_id) {
-      fetch(`http://localhost:3000/users/${localStorage.user_id}`)
+      fetch(`https://limitless-reef-85588.herokuapp.com/users/${localStorage.user_id}`)
         .then(r => r.json())
         .then(user => {
           console.log(user)
           this.findPortfolio(user.cash, user.portfolio_items, user.trades)
-          this.setToken(localStorage)
+          this.setUser(localStorage)
         })
     }
   }
@@ -66,7 +62,7 @@ class App extends React.Component {
   render() {
     return (<>
       <TopNavBar handleLogout={this.handleLogout} appState={this.state} />
-      <SwitchBox userPortfolio={this.state.userPortfolio} session={this.state.session} setToken={this.setToken} />
+      <SwitchBox cash={this.state.userCash} userPortfolio={this.state.userPortfolio} session={this.state.session} setUser={this.setUser} />
     </>
     )
   }

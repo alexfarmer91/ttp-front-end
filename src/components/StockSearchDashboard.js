@@ -1,7 +1,7 @@
 import React from 'react';
 import ResultsContainer from '../containers/ResultsContainer.js'
 import { Row, Col } from 'react-bootstrap';
-import { Input, Button, Icon, Container } from 'semantic-ui-react'
+import { Input, Button, Icon, Container, Header } from 'semantic-ui-react'
 
 class StockSearchDashboard extends React.Component {
 
@@ -47,6 +47,7 @@ class StockSearchDashboard extends React.Component {
         return (<Row style={{ minHeight: '98vh', backgroundColor: "#f5f5f5" }}>
             <Col xs={12} sm={12} md={6} lg={6} style={{ padding: '175px 0' }}>
                 <Container style={{ 'paddingLeft': '30vh', 'margin': 'auto' }}>
+                    {this.state.results.length === 0 ? <Header as='h1'>Search for tickers or stock names below...</Header> : null}
                     <Input
                         placeholder='Search...'
                         onChange={this.handleTickerChange}
