@@ -6,7 +6,7 @@ const ResultsContainer = (props) => {
         <Header>Search Results</Header>
         <Container>
             {props.results.map(result => {
-                return <Button href={`http://localhost:3001/trade/${result["1. symbol"]}`} key={result["1. symbol"]}>{result["1. symbol"]} - {result["2. name"]}</Button>
+                return <Button href={`/trade/${result["1. symbol"]}`} key={result["1. symbol"]}>{result["1. symbol"]} - {result["2. name"]}</Button>
             })}
         </Container>
     </Container>

@@ -13,6 +13,13 @@ class App extends React.Component {
     loggedInUserProfile: {}
   }
 
+  //TODO 
+  /*
+   fix cash/userCash issue
+   remove unnecessary console logs
+   build out portfolio and transaction history pages
+  */
+
   handleLogin = (obj) => {
     fetch('https://limitless-reef-85588.herokuapp.com/users')
       .then(r => r.json())
@@ -78,11 +85,17 @@ class App extends React.Component {
       loggedInUserId: null,
       loggedInUserProfile: {}
     })
-    window.location.href = "https://clever-hermann-ced08d.netlify.com/";
+    window.location.href = window.location.origin;
     localStorage.clear();
   }
 
   setUser = (obj) => {
+
+    if (typeof (obj) === "number") {
+      console.log(obj)
+      console.log("saved ya")
+      return
+    }
 
     localStorage.user_id = obj.id
 
@@ -103,13 +116,17 @@ class App extends React.Component {
 
   componentDidMount() {
     fetch('https://limitless-reef-85588.herokuapp.com/trades/30').then(r => r.json()).then(res => console.log(res));
+    if (localStorage.user_id === "undefined") {
+      this.handleLogout()
+      return
+    }
     if (!!localStorage.user_id) {
       fetch(`https://limitless-reef-85588.herokuapp.com/users/${localStorage.user_id}`)
         .then(r => r.json())
         .then(user => {
           console.log(user)
           this.findPortfolio(user.cash, user.portfolio_items, user.trades)
-          this.setUser(user.id)
+          this.setUser(user)
         })
     }
   }
