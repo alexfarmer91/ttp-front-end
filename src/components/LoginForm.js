@@ -22,28 +22,7 @@ export default class LoginForm extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault()
         console.log(this.state)
-        fetch("http://localhost:3000/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "LT1"
-            },
-            body: JSON.stringify({
-                email: this.state.email,
-                password: this.state.password
-            })
-        }).then(res => res.json())
-            .then(data => {
-                if (data.errors || data.error) {
-                    console.log(data.errors)
-                    this.setState({
-                        errors: data.errors
-                    })
-                } else {
-                    console.log(data)
-                    this.props.setToken(data)
-                }
-            })
+        this.props.handleLogin(this.state)
     }
 
     render() {
@@ -53,7 +32,7 @@ export default class LoginForm extends React.Component {
                 <Input label="Password" onChange={this.passwordChange} type="password" /><br></br>
                 <Container>
                     <Button onClick={this.props.backToMenu} >Back</Button>
-                    <input type="submit" value="Log In" class="ui blue button" />
+                    <input type="submit" value="Log In" className="ui blue button" />
                 </Container>
             </Form>
         </Container>)

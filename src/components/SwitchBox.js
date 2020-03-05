@@ -10,7 +10,7 @@ class SwitchBox extends React.Component {
 
     redirectIfLoggedIn = () => {
         if (!this.props.session) {
-            return <GreetingScreen setUser={this.props.setUser} />
+            return <GreetingScreen handleLogin={this.props.handleLogin} setUser={this.props.setUser} />
         } else {
             return <Redirect to="/trade" />
         }
@@ -25,7 +25,7 @@ class SwitchBox extends React.Component {
     }
 
     renderBuySellPage = (props) => {
-        return <BuySellPage userPortfolio={this.props.userPortfolio} cash={this.props.cash} {...props} session={this.props.session} />
+        return <BuySellPage addOrRemoveFromPortfolio={this.props.addOrRemoveFromPortfolio} userPortfolio={this.props.userPortfolio} cash={this.props.cash} {...props} session={this.props.session} updateCash={this.props.updateCash} />
     }
 
     renderStockSearchPage = () => {

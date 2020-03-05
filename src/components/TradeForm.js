@@ -19,6 +19,7 @@ export default class TradeForm extends React.Component {
     }
 
     buyShares = () => {
+        let newCash = (parseInt(this.props.cash) - (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))))
         Promise.all([
             fetch('https://limitless-reef-85588.herokuapp.com/trades', {
                 method: "POST",
@@ -51,7 +52,7 @@ export default class TradeForm extends React.Component {
             fetch(`https://limitless-reef-85588.herokuapp.com/users/${localStorage.user_id}`, {
                 method: "PATCH",
                 body: JSON.stringify({
-                    cash: (parseInt(this.props.cash) - (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))))
+                    cash: newCash
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,6 +62,9 @@ export default class TradeForm extends React.Component {
         ])
             .then((value) => {
                 console.log(value)
+                let newCash = (parseInt(this.props.cash) - (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))))
+                this.props.addOrRemoveFromPortfolio(value[0], true)
+                this.props.updateCash(newCash)
             })
             .catch((err) => {
                 console.log(err);
@@ -68,7 +72,8 @@ export default class TradeForm extends React.Component {
     }
 
     sellShares = () => {
-        let stockId;
+        let stockId = this.props.portfolio.find(x => x.ticker === this.props.symbol.toUpperCase()).id;
+        let updatedCash = (parseInt(this.props.cash) + (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))));
 
         Promise.all([
             fetch('https://limitless-reef-85588.herokuapp.com/trades', {
@@ -86,7 +91,7 @@ export default class TradeForm extends React.Component {
                 }
             })
                 .then(r => r.json()),
-            fetch(`https://limitless-reef-85588.herokuapp.com/portfolio_items/${this.props.portfolio.find(x => x.ticker === this.props.symbol.toUpperCase()).id}`, {
+            fetch(`https://limitless-reef-85588.herokuapp.com/portfolio_items/${stockId}`, {
                 method: 'DELETE',
                 body: JSON.stringify({
                     ticker: this.props.symbol.toUpperCase(),
@@ -102,7 +107,7 @@ export default class TradeForm extends React.Component {
             fetch(`https://limitless-reef-85588.herokuapp.com/users/${localStorage.user_id}`, {
                 method: "PATCH",
                 body: JSON.stringify({
-                    cash: (parseInt(this.props.cash) + (parseInt(this.props.price) * parseFloat(parseInt(this.state.quantity).toFixed(2))))
+                    cash: updatedCash
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,6 +117,8 @@ export default class TradeForm extends React.Component {
         ])
             .then((value) => {
                 console.log(value)
+                this.props.addOrRemoveFromPortfolio(value[0], false)
+                this.props.updateCash(updatedCash)
             })
             .catch((err) => {
                 console.log(err);
