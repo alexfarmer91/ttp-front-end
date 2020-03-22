@@ -135,7 +135,7 @@ class App extends React.Component {
   render() {
     return (<>
       <TopNavBar handleLogout={this.handleLogout} appState={this.state} />
-      <SwitchBox handleLogin={this.handleLogin} addOrRemoveFromPortfolio={this.addOrRemoveFromPortfolio} updateCash={this.updateCash} cash={this.state.userCash} userPortfolio={this.state.userPortfolio} session={this.state.session} setUser={this.setUser} />
+      <SwitchBox handleLogin={this.handleLogin} addOrRemoveFromPortfolio={this.addOrRemoveFromPortfolio} updateCash={this.updateCash} cash={this.state.userCash} name={this.state.loggedInUserProfile.first_name} userPortfolio={this.state.userPortfolio} session={this.state.session} setUser={this.setUser} />
     </>
     )
   }

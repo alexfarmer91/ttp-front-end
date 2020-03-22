@@ -21,7 +21,7 @@ class SwitchBox extends React.Component {
     }
 
     renderPortfolio = () => {
-        return <PortfolioPage />
+        return <PortfolioPage name={this.props.name} portfolio={this.props.userPortfolio} />
     }
 
     renderBuySellPage = (props) => {
@@ -35,10 +35,10 @@ class SwitchBox extends React.Component {
     render() {
         return (
             <Switch>
-                <Route exact path="/users/:id/portfolio" render={this.renderPortfolio} />
+                <Route path="/users/:id/portfolio" render={this.renderPortfolio} />
                 {/* <Route exact path="/users/:id/profile" render={this.renderUserPage} /> */}
-                <Route exact path="/users/:id/transactions" render={this.renderTransactionPage} />
-                <Route exact path="/trade/:id" render={this.renderBuySellPage} />
+                <Route path="/users/:id/transactions" render={this.renderTransactionPage} />
+                <Route path="/trade/:id" render={this.renderBuySellPage} />
                 <Route exact path="/trade/" render={this.renderStockSearchPage} />
                 <Route exact path="/" render={this.redirectIfLoggedIn} />
             </Switch>)
